@@ -1,0 +1,188 @@
+#!/usr/bin/env bash
+
+# SecDev Workstation Checker
+# Determines if a machine has SecDev's recommended language and software requirements installed.
+# In cases where a requirement is missing or out-of-date, Workstation Checker will install the
+# software via brew.
+
+#### Requirement Versions: ####
+
+PYTHON="3.6"
+GO="1.12"
+PYLINT="1.9"
+GOLANGCI_LINT="1.1"
+GIT="2.2"
+DEP="0.5"
+DOCKER="18.0"
+DOCKER_COMPOSE="1.2"
+DOCKER_MACHINE="0.16"
+MICROS="6.8"
+BREW="2.1"
+
+#####################
+
+# Color codes for user interface
+YELLOW=$(tput setaf 3)
+GREEN=$(tput setaf 2)
+CYAN=$(tput setaf 6)
+MAGENTA=$(tput setaf 5)
+RED=$(tput setaf 1)
+NORMAL=$(tput sgr0)
+
+# Compares two version numbers and returns an exit code of 0 if the first is greater than or equal to the second.
+# Returns a 1 if not.
+version_gt() {
+    vers_a=$1
+    vers_b=$2
+
+    a_first=$(echo $vers_a | cut -d '.' -f1)
+    b_first=$(echo $vers_b | cut -d '.' -f1)
+
+    a_second=$(echo $vers_a | cut -d '.' -f2 |sed 's/^0*//')
+    b_second=$(echo $vers_b | cut -d '.' -f2 |sed 's/^0*//')
+
+    if [ "$a_first" -gt "$b_first" ]; then
+        return 0
+    fi
+
+    if [[ "$a_first" -ge "$b_first" && "$a_second" -ge "$b_second" ]]; then
+        return 0
+    fi
+
+    return 1
+
+    }
+
+# Determines if a string is a number and returns a 0 if it is.
+# Returns a 1 if not.
+is_number() {
+    string=$1
+
+    re='^[0-9]+$'
+    if ! [[ $string =~ $re ]] ; then
+        return 1
+    fi
+    return 0
+}
+
+# Determines if a string is a version. Splits the string by '.' and runs is_number against both.
+# This is designed to help catch errors where a program's version output is compromised.
+is_version() {
+    string=$1
+
+    string_first=$(echo $string | cut -d '.' -f1)
+    string_second=$(echo $string| cut -d '.' -f2)
+
+    if is_number $string_first && is_number $string_second; then
+        return 0
+    else
+        return 1
+    fi
+}
+
+# Verifies whether or not requirement is installed, meets the requiremens, and has a registered command
+command_exists() {
+    req=$1
+    cmd=$2
+    v_flag=$3
+    v_req=$4
+
+    EXITCODE=0
+
+    printf "\n%s$req %s$v_req%s check: %s" "$CYAN" "$MAGENTA" "$CYAN" "$NORMAL"
+
+    COMMAND=$(command -v $cmd)
+    EXIT=$?
+    if [ $EXIT == "0" ]; then
+
+        VERSION=$(eval $cmd $v_flag 2>&1)
+        if ! is_version $VERSION; then
+            printf "%sVersion output for $req is invalid: $VERSION\n Aborting $req install.%s" "$RED" "$NORMAL"
+            return 2
+        fi
+        if version_gt $VERSION $v_req; then
+            printf "%sFound $VERSION!%s" "$GREEN" "$NORMAL"
+        else
+            printf "%sFound $VERSION.%s" "$RED" "$NORMAL"
+            EXITCODE=1
+        fi
+
+        printf "\n%sCommand:%s $COMMAND" "$GREEN" "$NORMAL"
+
+    else
+        printf "%s$req not found!%s" "$RED" "$NORMAL"
+        EXITCODE=1
+    fi
+
+    return $EXITCODE
+}
+
+# Attempts to install missing or out-of-date requirements
+install_req(){
+    req=$1
+    install_cmd=$2
+    v_req=$3
+
+    printf "%s\nInstalling $req $v_req... %s" "$YELLOW" "$NORMAL"
+    eval $install_cmd &>/dev/null
+    if [ $? == 0 ]; then
+        printf "%sSuccessfully installed!%s" "$GREEN" "$NORMAL"
+        return 0
+    else
+        printf "%sInstall failed. Please install version $req $v_req manually%s" "$RED" "$NORMAL"
+        return 1
+    fi
+}
+
+# Entry point function. First looks for valid installation of a requirement, and if one
+# is not found, tries to install it via homebrew
+req_checker(){
+    req=$1
+    cmd=$2
+    v_flag=$3
+    v_req=$4
+    install_cmd=$5
+
+    command_exists "$req" $cmd "$v_flag" "$v_req" "$install_cmd"
+    if [[ $? == 1 ]]; then
+        install_req "$req" "$install_cmd" "$v_req"
+    fi
+    printf "\n-------"
+}
+
+
+
+printf "\n%sAtlassian SecDev -- Workstation Setup%s" "$YELLOW" "$NORMAL"
+
+printf "\n-------"
+
+#### Homebrew Setup: ####
+
+req_checker 'Homebrew' brew "--version | sed -n 1p | cut -d ' ' -f2" $BREW "/usr/bin/ruby -e '$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)'"
+brew tap atlassian/micros ssh://git@stash.atlassian.com:7997/micros/micros-cli-homebrew-tap.git
+
+#### Requirement Checks: ####
+
+req_checker 'Python' python3 "--version | cut -d ' ' -f2 2>&1" $PYTHON 'brew install python3'
+
+req_checker 'Go' go "version | cut -d ' ' -f3 | tr -d 'go'" $GO 'brew install go'
+
+req_checker 'Pylint' pylint "--version 2>&1 | sed -n 2p | cut -d ' ' -f2 | sed -n 1p | tr -d ','" $PYLINT 'brew install pylint'
+
+req_checker 'Golangci Linter' golangci-lint "--version | cut -d ' ' -f4" $GOLANGCI_LINT 'brew install golangci/tap/golangci-lint'
+
+req_checker 'Git CLI' git "--version | cut -d ' ' -f3" $GIT 'brew install git'
+
+req_checker 'Dep' dep "version | cut -d ':' -f2 | sed -n 2p | tr -d ' v'" $DEP 'brew install dep'
+
+req_checker 'Docker' docker "--version | cut -d ' ' -f3 | tr -d ','" $DOCKER 'brew install docker'
+
+req_checker 'Docker Compose' docker-compose "--version | cut -d ' ' -f3 | tr -d ','" $DOCKER_COMPOSE 'brew install docker-compose'
+
+req_checker 'Docker Machine' docker-machine "--version | cut -d ' ' -f3 | tr -d ','" $DOCKER_MACHINE 'brew install docker-machine'
+
+req_checker 'Micros' micros 'version' $MICROS 'brew install micros-cli'
+
+#####################
+
+printf "\n"

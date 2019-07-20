@@ -1,0 +1,58 @@
+requirements:
+  python: "3.6"
+  go: "1.12"
+  pylint: "1.9"
+  golangci-lint: "1.1"
+  git: "2.2"
+  dep: "0.5"
+  docker: "18.0"
+  docker-compose: "1.2"
+  docker-machine: "0.16"
+  micros: "6.8"
+  brew: "2.1"
+packages:
+  default:
+    installer: brew
+  python:
+    command: python3
+    version_extraction: "--version | cut -d ' ' -f2 2>&1"
+  go:
+    command: go
+    version_extraction: "version | cut -d ' ' -f3 | tr -d 'go'"
+  pylint:
+    command: pylint
+    version_extraction: "--version 2>&1 | sed -n 2p | cut -d ' ' -f2 | sed -n 1p | tr -d ','"
+  golangci-lint:
+    command: golangci-lint
+    version_extraction: "--version | cut -d ' ' -f4"
+  git:
+    command: git
+    version_extraction: "--version | cut -d ' ' -f3"
+  dep:
+    command: dep
+    version_extraction: "version | cut -d ':' -f2 | sed -n 2p | tr -d ' v'"
+  docker:
+    command: docker
+    version_extraction:  "--version | cut -d ' ' -f3 | tr -d ','"
+  docker-compose:
+    command: docker-compose
+    version_extraction: "--version | cut -d ' ' -f3 | tr -d ','"
+  docker-machine:
+    command: docker-machine
+    version_extraction: "--version | cut -d ' ' -f3 | tr -d ','"
+  micros:
+    command: micros
+    install_name: micros-cli # substitutes for command, in the case the package is installed with a different name
+    version_extraction: 'version'
+installers:
+  brew:
+    command: brew install
+    version_extraction: "--version | sed -n 1p | cut -d ' ' -f2"
+    setup:
+      mac: "/usr/bin/ruby -e '$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)'"
+      linux: "sh -c '$(curl -fsSL https://raw.githubusercontent.com/Linuxbrew/install/master/install.sh)'"
+    configurations:
+      - "brew tap atlassian/micros ssh://git@stash.atlassian.com:7997/micros/micros-cli-homebrew-tap.git"
+
+
+

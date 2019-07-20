@@ -1,3 +1,4 @@
+version: "SecDev"
 requirements:
   python: "3.6"
   go: "1.12"
@@ -9,47 +10,58 @@ requirements:
   docker-compose: "1.2"
   docker-machine: "0.16"
   micros: "6.8"
-  brew: "2.1"
+  brew: "2.4"
 packages:
   default:
     installer: brew
   python:
+    display: Python
     command: python3
     version_extraction: "--version | cut -d ' ' -f2 2>&1"
   go:
+    display: Golang
     command: go
     version_extraction: "version | cut -d ' ' -f3 | tr -d 'go'"
   pylint:
+    display: Pylint
     command: pylint
     version_extraction: "--version 2>&1 | sed -n 2p | cut -d ' ' -f2 | sed -n 1p | tr -d ','"
   golangci-lint:
+    display: Golangci-lint
     command: golangci-lint
     version_extraction: "--version | cut -d ' ' -f4"
   git:
+    display: Git
     command: git
     version_extraction: "--version | cut -d ' ' -f3"
   dep:
+    display: Dep
     command: dep
     version_extraction: "version | cut -d ':' -f2 | sed -n 2p | tr -d ' v'"
   docker:
+    display: Docker
     command: docker
     version_extraction:  "--version | cut -d ' ' -f3 | tr -d ','"
   docker-compose:
+    display: Docker-compose
     command: docker-compose
     version_extraction: "--version | cut -d ' ' -f3 | tr -d ','"
   docker-machine:
+    display: Docker-machine
     command: docker-machine
     version_extraction: "--version | cut -d ' ' -f3 | tr -d ','"
   micros:
+    display: Micros
     command: micros
-    install_name: micros-cli # substitutes for command, in the case the package is installed with a different name
+    install_command: micros-cli # substitutes for command, in the case the package is installed with a different name
     version_extraction: 'version'
 installers:
   brew:
+    display: Homebrew
     command: brew install
     version_extraction: "--version | sed -n 1p | cut -d ' ' -f2"
     setup:
-      mac: "/usr/bin/ruby -e '$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)'"
+      mac: "/usr/bin/ruby -e $(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
       linux: "sh -c '$(curl -fsSL https://raw.githubusercontent.com/Linuxbrew/install/master/install.sh)'"
     configurations:
       - "brew tap atlassian/micros ssh://git@stash.atlassian.com:7997/micros/micros-cli-homebrew-tap.git"

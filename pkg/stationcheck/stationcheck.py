@@ -109,11 +109,13 @@ class station_check:
                                                                           str(successes),
                                                                           str(total),
                                                                           bcolors.ENDC))
+            return False
         else:
             print("%sPASS: %s packages out of %s meet requirements!%s" % (bcolors.OKGREEN,
                                                                           str(successes),
                                                                           str(total),
                                                                           bcolors.ENDC))
+            return True
 
     def bash(self, command):
         '''Evaluates a string as a bash command.'''

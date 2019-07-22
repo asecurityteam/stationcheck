@@ -23,6 +23,7 @@ packages:
     version_extraction: "version | cut -d ' ' -f3 | tr -d 'go'"
   pylint:
     display: Pylint
+    installer: pip3
     command: pylint
     version_extraction: "--version 2>&1 | sed -n 2p | cut -d ' ' -f2 | sed -n 1p | tr -d ','"
   golangci-lint:
@@ -59,3 +60,5 @@ installers:
     command: brew install
     configurations:
       - "brew tap atlassian/micros ssh://git@stash.atlassian.com:7997/micros/micros-cli-homebrew-tap.git"
+  pip3:
+    command: pip3 install

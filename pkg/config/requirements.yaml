@@ -59,6 +59,3 @@ installers:
     command: brew install
     configurations:
       - "brew tap atlassian/micros ssh://git@stash.atlassian.com:7997/micros/micros-cli-homebrew-tap.git"
-
-
-

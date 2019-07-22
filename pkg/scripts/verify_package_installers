@@ -13,7 +13,7 @@ fi
 # brew tap atlassian/micros ssh://git@stash.atlassian.com:7997/micros/micros-cli-homebrew-tap.git
 
 command -v python3
-if [ $? == 0]; then
+if [ $? == 0 ]; then
     brew upgrade python3
 else
     brew install python3

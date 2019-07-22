@@ -1,15 +1,11 @@
-version: "SecDev"
+version: "Some other team's"
 requirements:
   python: "3.6"
   go: "1.12"
   pylint: "1.9"
   golangci-lint: "1.1"
   git: "2.2"
-  dep: "0.5"
-  docker: "18.0"
-  docker-compose: "1.2"
-  docker-machine: "0.16"
-  micros: "6.8"
+  ruby: "2.2"
 packages:
   default:
     installer: brew
@@ -33,27 +29,6 @@ packages:
     display: Git
     command: git
     version_extraction: "--version | cut -d ' ' -f3"
-  dep:
-    display: Dep
-    command: dep
-    version_extraction: "version | cut -d ':' -f2 | sed -n 2p | tr -d ' v'"
-  docker:
-    display: Docker
-    command: docker
-    version_extraction:  "--version | cut -d ' ' -f3 | tr -d ','"
-  docker-compose:
-    display: Docker-compose
-    command: docker-compose
-    version_extraction: "--version | cut -d ' ' -f3 | tr -d ','"
-  docker-machine:
-    display: Docker-machine
-    command: docker-machine
-    version_extraction: "--version | cut -d ' ' -f3 | tr -d ','"
-  micros:
-    display: Micros
-    command: micros
-    install_command: micros-cli # substitutes for command, in the case the package is installed with a different name
-    version_extraction: 'version'
 installers:
   brew:
     command: brew install

@@ -1,0 +1,2 @@
+include pkg/config/requirements.yaml
+include pkg/scripts/verify_package_installers

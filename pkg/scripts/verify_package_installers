@@ -1,0 +1,24 @@
+#!/usr/bin/env sh
+
+#Brew
+command -v brew
+if [ $? != 0 ]; then
+    # Mac
+    /usr/bin/ruby -e $(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)
+    # Linux
+    #sh -c '$(curl -fsSL https://raw.githubusercontent.com/Linuxbrew/install/master/install.sh)'
+fi
+
+#Addition configurations
+brew tap atlassian/micros ssh://git@stash.atlassian.com:7997/micros/micros-cli-homebrew-tap.git
+
+#Pip
+command -v pip
+if [ $? != 0 ]; then
+    brew install python3
+fi
+
+#Additional configurations
+pip3 install pyyaml
+pip3 install setuptools
+

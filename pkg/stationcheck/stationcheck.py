@@ -42,7 +42,8 @@ class station_check:
         installs = 0
 
         for installer in config["installers"]:
-            self.install_configs(config["installers"][installer]["configurations"])
+            if "configurations" in config["installers"][installer].keys():
+                self.install_configs(config["installers"][installer]["configurations"])
         print("--------------------")
         for package in config["packages"]:
             if package != "default":

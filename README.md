@@ -1,7 +1,7 @@
 <a id="markdown-SecDev Check" name="SecDev Check"></a>
-# SecDev Workstation Check - A simple workstation setup tool
+# Station Check - A simple workstation setup tool
 
-<https://github.com/asecurityteam/secdev-check>
+<https://github.com/asecurityteam/stationcheck>
 
 <a id="markdown-overview" name="overview"></a>
 ## Workstation Check

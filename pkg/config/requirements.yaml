@@ -72,3 +72,8 @@ installers:
     command: brew cask install
   pip3:
     command: pip3 install
+authentications:
+  atl-docker:
+    display: Atlassian Docker Registry
+    checks:
+      - grep docker.atl-paas.net ~/.docker/config.json

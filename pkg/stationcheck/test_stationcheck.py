@@ -1,3 +1,4 @@
+'''Runs unit tests on stationcheck'''
 from pkg.stationcheck.stationcheck import station_check
 
 test_command = "pip3 install pylint"

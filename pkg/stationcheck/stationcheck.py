@@ -33,18 +33,32 @@ class station_check:
         '''Reads in requirements YAML file, checks versions, and installs
         out-of-date or missing packages.'''
 
+        # Loads in the requirements.yaml file into a dict
         config = self.load_yaml(config_file)
 
         print("\n%s%s Workstation Setup%s\n" % (bcolors.WARNING, config["version"], bcolors.ENDC))
 
+        # Tracks number of installs and whether or not they are successful
         successes = 0
         failures = 0
         installs = 0
 
+        # Installers
+        # Runs a series of configuration commands prior to beginining any installations
         for installer in config["installers"]:
             if "configurations" in config["installers"][installer].keys():
                 self.install_configs(config["installers"][installer]["configurations"])
+
         print("--------------------")
+
+        # Authentication Checks
+        # Checks that your machine appears to hold the right authentications
+        for authblock in config["authentications"]:
+            self.check_authentications(config["authentications"][authblock])
+        print("--------------------")
+
+        # Packages
+        # Checks package versions, and installs missing or out-of-date ones.
         for package in config["packages"]:
             if package != "default":
                 print("%s%s %s%s%s check: %s" % (bcolors.OKBLUE,
@@ -53,6 +67,7 @@ class station_check:
                                                  config["requirements"][package],
                                                  bcolors.OKBLUE,
                                                  bcolors.ENDC), end='')
+                # Calls version check to see if package is out-of-date
                 v_check = self.version_check(config["packages"][package]["command"],
                                              config["packages"][package]["version_extraction"],
                                              config["requirements"][package])
@@ -66,11 +81,13 @@ class station_check:
                            config["packages"][package]["display"],
                            bcolors.ENDC))
 
+                    # If package description in yaml has no defined installer, uses the default one
                     if "installer" not in config["packages"][package]:
                         installer = config["packages"]["default"]["installer"]
                     else:
                         installer = config["packages"][package]["installer"]
 
+                    # If a package has a unique install command name, use that instead
                     if "install_command" in config["packages"][package].keys():
                         command = config["packages"][package]["install_command"]
                     else:
@@ -204,6 +221,28 @@ class station_check:
             return False
         else:
             return True
+
+    def check_authentications(self, authentication_block):
+        '''Runs a series of commands listed under a permissions requirements and determines if
+        permissions exist'''
+        failures = 0
+        for check in authentication_block["checks"]:
+            stdout, err = self.bash(check)
+            if err is not 0:
+                print("%sFailed check:%s %s" % (bcolors.FAIL, bcolors.ENDC, check))
+                print(stdout)
+                failures += 1
+        if failures == 0:
+            print("%s%s%s: Authentication configuration exists! %s" % (bcolors.OKBLUE,
+                                                                       authentication_block["display"],
+                                                                       bcolors.OKGREEN,
+                                                                       bcolors.ENDC))
+        else:
+            print("%s%s%s: Authentication configuration not present. %s" % (bcolors.OKBLUE,
+                                                                            authentication_block["display"],
+                                                                            bcolors.FAIL,
+                                                                            bcolors.ENDC))
+
 
 if __name__ == "__main__":
 

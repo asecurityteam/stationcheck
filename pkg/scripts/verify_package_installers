@@ -33,3 +33,4 @@ if [ $? == 0 ]; then
     printf "Atlassian docker registry authentication found!"
 else
     printf "Atlassian docker registry not found."
+fi

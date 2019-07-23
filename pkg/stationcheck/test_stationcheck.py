@@ -9,7 +9,7 @@ s = station_check(config)
 
 def test_print_results():
     '''Tests workstation results printing method'''
-    assert s.print_results(8, 4, 3)
+    assert s.print_results(8, 4, 3) == False
 
 def test_bash():
     '''Tests stationcheck's bash wrapper'''

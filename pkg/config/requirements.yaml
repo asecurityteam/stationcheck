@@ -10,6 +10,7 @@ requirements:
   docker-compose: "1.2"
   docker-machine: "0.16"
   micros: "6.8"
+  vscode: "1.0"
 packages:
   default:
     installer: brew
@@ -55,11 +56,19 @@ packages:
     command: micros
     install_command: micros-cli # substitutes for command, in the case the package is installed with a different name
     version_extraction: 'version'
+  vscode:
+    display: VScode
+    command: code
+    install_command: visual-studio-code
+    installer: brew-cask
+    version_extraction: "--version cut -d ' ' -f1 | sed -n 1p"
 installers:
   brew:
     command: brew install
     configurations:
       - "brew tap atlassian/micros ssh://git@stash.atlassian.com:7997/micros/micros-cli-homebrew-tap.git"
       - "brew tap golangci/tap"
+  brew-cask:
+    command: brew cask install
   pip3:
     command: pip3 install

@@ -188,6 +188,7 @@ class station_check:
 
     def install_configs(self, config_list):
         '''Runs configuration commands listed under an installer in the config file'''
+        failed_installs = 0
         for configuration in config_list:
             stdout, err = self.bash(configuration)
             #pylint: disable=literal-comparison
@@ -195,11 +196,14 @@ class station_check:
                 print("%sFailed to run: %s%s" % (bcolors.FAIL,
                                                  bcolors.ENDC,
                                                  configuration))
-                return False
+                failed_installs += 1
             print("%sInstaller configuration: %s%s" % (bcolors.OKGREEN,
                                                        bcolors.ENDC,
                                                        configuration))
-        return True
+        if failed_installs != 0:
+            return False
+        else:
+            return True
 
 if __name__ == "__main__":
 

@@ -10,7 +10,8 @@ if [ $? != 0 ]; then
 fi
 
 #Addition configurations
-# brew tap atlassian/micros ssh://git@stash.atlassian.com:7997/micros/micros-cli-homebrew-tap.git
+brew tap atlassian/micros ssh://git@stash.atlassian.com:7997/micros/micros-cli-homebrew-tap.git
+brew tap golangci/tap
 
 command -v python3
 if [ $? == 0 ]; then

@@ -9,7 +9,7 @@ if [ $? != 0 ]; then
     #sh -c '$(curl -fsSL https://raw.githubusercontent.com/Linuxbrew/install/master/install.sh)'
 fi
 
-#Addition configurations
+#Additional configurations
 brew tap atlassian/micros ssh://git@stash.atlassian.com:7997/micros/micros-cli-homebrew-tap.git
 brew tap golangci/tap
 
@@ -25,3 +25,11 @@ pip3 install pyyaml
 pip3 install setuptools
 pip3 install packaging
 
+# Checking for registry authentication
+
+grep docker.atl-paas.net ~/.docker/config.json
+
+if [ $? == 0 ]; then
+    printf "Atlassian docker registry authentication found!"
+else
+    printf "Atlassian docker registry not found."

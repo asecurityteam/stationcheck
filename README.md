@@ -10,6 +10,8 @@ Workstation check (stationcheck) allows your team to automate workstation setup 
 
 #### Quick Start
 
+Note: If you are a new hire, you will need access to our internal bitbucket. These instructions should be in your onboarding Trello board, or you can navigate directly to go/iwantbitbucket.
+
 1. If you don't have Homebrew installed, go ahead and run:
 
 ```bash

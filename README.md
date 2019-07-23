@@ -21,6 +21,10 @@ pip install --upgrade git+git://github.com/asecurityteam/stationcheck
 
 Note: If you are a new hire, you will need access to our internal bitbucket. These instructions should be in your onboarding Trello board, or you can navigate directly to go/iwantbitbucket.
 
+2nd Note: Additionally, you'll need to setup an ssh key with stash.atlassian.com in order for the Micros download to work.
+
+3rd Note: If you've already installed VSCode, don't worry if the version check fails on you. The version check only works for VSCode installations that have been installed via brew.
+
 1. If you don't have Homebrew installed, go ahead and run:
 
 ```bash

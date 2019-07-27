@@ -14,6 +14,7 @@ test:
 	pytest
 
 coverage:
+	mkdir -p .pycoverage
 	docker run -ti \
         --mount src="$(DIR)",target="/go/src/$(PROJECT_PATH)",type="bind" \
         -w "/go/src/$(PROJECT_PATH)" \

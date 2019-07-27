@@ -1,7 +1,6 @@
 language: "python"
 sudo: false
-go:
-  - "3.7"
+python: "3.7"
 install:
   - make dep
 script:

@@ -12,6 +12,12 @@ lint:
 test:
 	pytest
 
+coverage:
+	docker run -ti \
+        --mount src="$(DIR)",target="/go/src/$(PROJECT_PATH)",type="bind" \
+        -w "/go/src/$(PROJECT_PATH)" \
+        registry.hub.docker.com/asecurityteam/sdcli:v1 python coverage
+
 build:
 	python3 setup.py bdist_wheel
 

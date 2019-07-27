@@ -10,6 +10,7 @@ lint:
         -w "/go/src/$(PROJECT_PATH)" \
         registry.hub.docker.com/asecurityteam/sdcli:v1 python lint
 test:
+	mkdir -p .pycoverage
 	pytest
 
 coverage:

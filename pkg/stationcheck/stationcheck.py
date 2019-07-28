@@ -28,7 +28,7 @@ class bcolors:
 class station_check:
     '''Checks, updates, and otherwise sets up a SecDev workstation to meet our requirements'''
 
-    #pylint: disable=unused-argument
+    #pylint: disable=unused-argument, too-many-locals, too-many-branches
     def __init__(self, config_file=REQ_FILE, verbose=False, test=False):
         '''Reads in requirements YAML file, checks versions, and installs
         out-of-date or missing packages.'''
@@ -117,7 +117,6 @@ class station_check:
                                                 bcolors.VIOLET,
                                                 str(installs),
                                                 bcolors.ENDC))
-        #pylint: disable=literal-comparison
         if failures is not 0:
             print("%sInstallations failed: %s%s" % (bcolors.WARNING,
                                                     str(failures),
@@ -143,7 +142,6 @@ class station_check:
                              stderr=subprocess.PIPE,
                              executable='/bin/bash')
 
-        #pylint: disable=literal-comparison
         if run.returncode is not 0:
 
             print("%sExit code: %s%s" % (bcolors.FAIL,
@@ -208,7 +206,6 @@ class station_check:
         failed_installs = 0
         for configuration in config_list:
             stdout, err = self.bash(configuration)
-            #pylint: disable=literal-comparison
             if err is not 0:
                 print("%sFailed to run: %s%s" % (bcolors.FAIL,
                                                  bcolors.ENDC,
@@ -222,11 +219,11 @@ class station_check:
         else:
             return True
 
-    def check_authentications(self, authentication_block):
+    def check_authentications(self, auth_block):
         '''Runs a series of commands listed under a permissions requirements and determines if
         permissions exist'''
         failures = 0
-        for check in authentication_block["checks"]:
+        for check in auth_block["checks"]:
             stdout, err = self.bash(check)
             if err is not 0:
                 print("%sFailed check:%s %s" % (bcolors.FAIL, bcolors.ENDC, check))
@@ -234,12 +231,12 @@ class station_check:
                 failures += 1
         if failures == 0:
             print("%s%s%s: Authentication configuration exists! %s" % (bcolors.OKBLUE,
-                                                                       authentication_block["display"],
+                                                                       auth_block["display"],
                                                                        bcolors.OKGREEN,
                                                                        bcolors.ENDC))
         else:
             print("%s%s%s: Authentication configuration not present. %s" % (bcolors.OKBLUE,
-                                                                            authentication_block["display"],
+                                                                            auth_block["display"],
                                                                             bcolors.FAIL,
                                                                             bcolors.ENDC))
 

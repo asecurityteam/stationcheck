@@ -1,38 +1,38 @@
 '''Runs unit tests on stationcheck'''
 from pkg.stationcheck.stationcheck import station_check
 
-test_command = "pip3 install pylint"
-test_ve = "--version 2>&1 | sed -n 2p | cut -d ' ' -f2 | sed -n 1p | tr -d ','"
-test_req = "1.9"
-config = "pkg/config/requirements.yaml"
-config_list = ["pip3 install pylint", "pip3 install pyyaml"]
-s = station_check(config)
+TEST_COMMAND = "pip3 install pylint"
+TEST_EXTRACTOR = "--version 2>&1 | sed -n 2p | cut -d ' ' -f2 | sed -n 1p | tr -d ','"
+TEST_REQ = "1.9"
+CONFIG = "pkg/config/requirements.yaml"
+CONFIG_LIST = ["pip3 install pylint", "pip3 install pyyaml"]
+TEST_SC = station_check(CONFIG)
 
 def test_print_results():
     '''Tests workstation results printing method'''
-    assert s.print_results(8, 4, 3) == False
+    assert TEST_SC.print_results(8, 4, 3) is not False
 
 def test_bash():
     '''Tests stationcheck's bash wrapper'''
-    stdout, err = s.bash(test_command)
+    stdout, err = TEST_SC.bash(TEST_COMMAND)
     assert err is 0
 
 def test_load_yaml():
     '''Tests whether or not our yaml will raise an error when loaded'''
-    s.load_yaml(config)
+    TEST_SC.load_yaml(CONFIG)
 
 def test_version_check():
     '''Tests that version comparison returns expected results'''
-    assert s.version_check(test_command, test_ve, test_req)
+    assert TEST_SC.version_check(TEST_COMMAND, TEST_EXTRACTOR, TEST_REQ)
 
 def test_version_compare():
     '''Tests that version comparison returns expected results'''
-    assert s.version_compare("2.22", "2.21")
+    assert TEST_SC.version_compare("2.22", "2.21")
 
 def test_install_package():
     '''Tests that pip installs work'''
-    stdout, err = s.install_package("pylint", "pip3 install")
+    stdout, err = TEST_SC.install_package("pylint", "pip3 install")
 
 def test_install_configs():
     '''Tests that configurations run successfully'''
-    assert s.install_configs(config_list)
+    assert TEST_SC.install_configs(CONFIG_LIST)

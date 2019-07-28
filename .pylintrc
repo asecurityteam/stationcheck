@@ -1,3 +1,5 @@
 [MESSAGES CONTROL]
 disable=
-    unused-variable
+    unused-variable,
+    no-else-return,
+    literal-comparison

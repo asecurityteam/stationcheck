@@ -32,3 +32,4 @@ deploy: build
 clean:
 	rm -rf build/
 	rm -rf dist/
+	rm -rf .pycoverage/

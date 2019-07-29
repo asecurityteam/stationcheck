@@ -19,7 +19,7 @@ pip install --upgrade git+git://github.com/asecurityteam/stationcheck
 
 #### Quick Start
 
-Note: If you are a new hire, you will need access to our internal bitbucket. These instructions should be in your onboarding Trello board, or you can navigate directly to go/iwantbitbucket.
+Note: If you are a new Atlassian hire, you will need access to our internal bitbucket. These instructions should be in your onboarding Trello board, or you can navigate directly to go/iwantbitbucket. For non-atlassian users, don't worry about any failed installs or messages relating to Micros. That is internal to Atlassian, and does not affect stationcheck's functionality. It can be safely removed.
 
 2nd Note: Additionally, you'll need to setup an ssh key with stash.atlassian.com in order for the Micros download to work.
 
@@ -205,4 +205,16 @@ installers: # More detailed information on package installers
 
 ## Setting up workstation check for your team
 
-(coming soon)
+There are a few different ways you can use workstation check for your team. Once you've created a configuration file, you can simply run:
+
+```bash
+stationcheck YourTeamsConfig.yaml
+```
+
+But if you'd like new users to be able to run the workstation checker without having to send them the config file, you should consider creating your own branch or repository of stationcheck. Then you can direct users to use:
+
+```bash
+pip install --upgrade git+git://github.com/asecurityteam/stationcheck@<Your Branch Name>
+```
+
+This way, you can host your team's config file remotely, and avoid the hassle of keeping track of config files on your local machines.

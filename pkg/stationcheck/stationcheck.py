@@ -73,7 +73,7 @@ class StationCheck:
 
                 if v_check:
                     successes += 1
-                elif not v_check and not v_check == "invalid":
+                elif not v_check:
 
                     print("%sInstalling newer version of %s...%s" %
                           (Bcolors.WARNING,

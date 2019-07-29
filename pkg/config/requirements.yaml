@@ -1,6 +1,6 @@
 version: "SecDev"
 requirements:
-  python: "3.6"
+  python: "3.7"
   go: "1.12"
   pylint: "1.9"
   golangci-lint: "1.1"

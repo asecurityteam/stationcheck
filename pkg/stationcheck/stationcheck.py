@@ -1,5 +1,5 @@
-'''A workstation check for up-to-date packages and languages'''
 #!/usr/bin/env python3
+'''A workstation check for up-to-date packages and languages'''
 
 import subprocess
 import argparse
@@ -11,8 +11,8 @@ import yaml
 PACKAGE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "../.."))
 REQ_FILE = os.path.join(PACKAGE_DIR, "pkg/config/requirements.yaml")
 
-#pylint: disable=too-few-public-methods, invalid-name
-class bcolors:
+#pylint: disable=too-few-public-methods
+class Bcolors:
     '''A strucut for commonly used terminal colors'''
     HEADER = '\033[95m'
     OKBLUE = '\033[94m'
@@ -24,8 +24,7 @@ class bcolors:
     UNDERLINE = '\033[4m'
     VIOLET = '\033[35m'
 
-#pylint: disable=invalid-name
-class station_check:
+class StationCheck:
     '''Checks, updates, and otherwise sets up a SecDev workstation to meet our requirements'''
 
     #pylint: disable=unused-argument, too-many-locals, too-many-branches
@@ -36,7 +35,7 @@ class station_check:
         # Loads in the requirements.yaml file into a dict
         config = self.load_yaml(config_file)
 
-        print("\n%s%s Workstation Setup%s\n" % (bcolors.WARNING, config["version"], bcolors.ENDC))
+        print("\n%s%s Workstation Setup%s\n" % (Bcolors.WARNING, config["version"], Bcolors.ENDC))
 
         # Tracks number of installs and whether or not they are successful
         successes = 0
@@ -61,12 +60,12 @@ class station_check:
         # Checks package versions, and installs missing or out-of-date ones.
         for package in config["packages"]:
             if package != "default":
-                print("%s%s %s%s%s check: %s" % (bcolors.OKBLUE,
+                print("%s%s %s%s%s check: %s" % (Bcolors.OKBLUE,
                                                  config["packages"][package]["display"],
-                                                 bcolors.VIOLET,
+                                                 Bcolors.VIOLET,
                                                  config["requirements"][package],
-                                                 bcolors.OKBLUE,
-                                                 bcolors.ENDC), end='')
+                                                 Bcolors.OKBLUE,
+                                                 Bcolors.ENDC), end='')
                 # Calls version check to see if package is out-of-date
                 v_check = self.version_check(config["packages"][package]["command"],
                                              config["packages"][package]["version_extraction"],
@@ -77,9 +76,9 @@ class station_check:
                 elif not v_check and not v_check == "invalid":
 
                     print("%sInstalling newer version of %s...%s" %
-                          (bcolors.WARNING,
+                          (Bcolors.WARNING,
                            config["packages"][package]["display"],
-                           bcolors.ENDC))
+                           Bcolors.ENDC))
 
                     # If package description in yaml has no defined installer, uses the default one
                     if "installer" not in config["packages"][package]:
@@ -99,10 +98,10 @@ class station_check:
                     if err == 0:
                         successes += 1
                         installs += 1
-                        print("%sSuccess!%s" % (bcolors.OKGREEN, bcolors.ENDC))
+                        print("%sSuccess!%s" % (Bcolors.OKGREEN, Bcolors.ENDC))
                     else:
                         failures += 1
-                        print("%sInstallation failed.%s" % (bcolors.FAIL, bcolors.ENDC))
+                        print("%sInstallation failed.%s" % (Bcolors.FAIL, Bcolors.ENDC))
                         print(stdout)
 
                 print("--------------------")
@@ -113,24 +112,24 @@ class station_check:
     def print_results(self, successes, failures, installs):
         '''Prints outcome of workstation check'''
         total = successes + failures
-        print("%sPackages installed: %s%s%s" % (bcolors.OKGREEN,
-                                                bcolors.VIOLET,
+        print("%sPackages installed: %s%s%s" % (Bcolors.OKGREEN,
+                                                Bcolors.VIOLET,
                                                 str(installs),
-                                                bcolors.ENDC))
+                                                Bcolors.ENDC))
         if failures is not 0:
-            print("%sInstallations failed: %s%s" % (bcolors.WARNING,
+            print("%sInstallations failed: %s%s" % (Bcolors.WARNING,
                                                     str(failures),
-                                                    bcolors.ENDC))
-            print("%sFAIL: %s packages out of %s meet requirements.%s" % (bcolors.FAIL,
+                                                    Bcolors.ENDC))
+            print("%sFAIL: %s packages out of %s meet requirements.%s" % (Bcolors.FAIL,
                                                                           str(successes),
                                                                           str(total),
-                                                                          bcolors.ENDC))
+                                                                          Bcolors.ENDC))
             return False
         else:
-            print("%sPASS: %s packages out of %s meet requirements!%s" % (bcolors.OKGREEN,
+            print("%sPASS: %s packages out of %s meet requirements!%s" % (Bcolors.OKGREEN,
                                                                           str(successes),
                                                                           str(total),
-                                                                          bcolors.ENDC))
+                                                                          Bcolors.ENDC))
             return True
 
     def bash(self, command):
@@ -144,13 +143,13 @@ class station_check:
 
         if run.returncode is not 0:
 
-            print("%sExit code: %s%s" % (bcolors.FAIL,
+            print("%sExit code: %s%s" % (Bcolors.FAIL,
                                          str(run.returncode),
-                                         bcolors.ENDC))
+                                         Bcolors.ENDC))
 
-            print("%sFailed to run: %s%s" % (bcolors.FAIL,
+            print("%sFailed to run: %s%s" % (Bcolors.FAIL,
                                              command,
-                                             bcolors.ENDC))
+                                             Bcolors.ENDC))
 
         return run.stdout, run.returncode
 
@@ -178,21 +177,21 @@ class station_check:
             if str(extracted) == "":
                 return False
             print("%sExtracted version number (%s) appears to be an invalid format. \
-                    Consider updating your version extraction command.%s" % (bcolors.FAIL,
+                    Consider updating your version extraction command.%s" % (Bcolors.FAIL,
                                                                              str(extracted),
-                                                                             bcolors.ENDC))
+                                                                             Bcolors.ENDC))
             return "invalid"
 
 
 
         if more_recent:
-            print("%sFound %s!%s" % (bcolors.OKGREEN,
+            print("%sFound %s!%s" % (Bcolors.OKGREEN,
                                      extracted,
-                                     bcolors.ENDC))
+                                     Bcolors.ENDC))
         else:
-            print("%sFound %s!%s" % (bcolors.WARNING,
+            print("%sFound %s!%s" % (Bcolors.WARNING,
                                      extracted,
-                                     bcolors.ENDC))
+                                     Bcolors.ENDC))
 
         return more_recent
 
@@ -207,12 +206,12 @@ class station_check:
         for configuration in config_list:
             stdout, err = self.bash(configuration)
             if err is not 0:
-                print("%sFailed to run: %s%s" % (bcolors.FAIL,
-                                                 bcolors.ENDC,
+                print("%sFailed to run: %s%s" % (Bcolors.FAIL,
+                                                 Bcolors.ENDC,
                                                  configuration))
                 failed_installs += 1
-            print("%sInstaller configuration: %s%s" % (bcolors.OKGREEN,
-                                                       bcolors.ENDC,
+            print("%sInstaller configuration: %s%s" % (Bcolors.OKGREEN,
+                                                       Bcolors.ENDC,
                                                        configuration))
         if failed_installs != 0:
             return False
@@ -226,19 +225,19 @@ class station_check:
         for check in auth_block["checks"]:
             stdout, err = self.bash(check)
             if err is not 0:
-                print("%sFailed check:%s %s" % (bcolors.FAIL, bcolors.ENDC, check))
+                print("%sFailed check:%s %s" % (Bcolors.FAIL, Bcolors.ENDC, check))
                 print(stdout)
                 failures += 1
         if failures == 0:
-            print("%s%s%s: Authentication configuration exists! %s" % (bcolors.OKBLUE,
+            print("%s%s%s: Authentication configuration exists! %s" % (Bcolors.OKBLUE,
                                                                        auth_block["display"],
-                                                                       bcolors.OKGREEN,
-                                                                       bcolors.ENDC))
+                                                                       Bcolors.OKGREEN,
+                                                                       Bcolors.ENDC))
         else:
-            print("%s%s%s: Authentication configuration not present. %s" % (bcolors.OKBLUE,
+            print("%s%s%s: Authentication configuration not present. %s" % (Bcolors.OKBLUE,
                                                                             auth_block["display"],
-                                                                            bcolors.FAIL,
-                                                                            bcolors.ENDC))
+                                                                            Bcolors.FAIL,
+                                                                            Bcolors.ENDC))
 
 
 if __name__ == "__main__":
@@ -256,4 +255,4 @@ if __name__ == "__main__":
         if ARGS[arg] is not None:
             ARGDICT[arg] = ARGS[arg]
 
-    station_check(**ARGDICT)
+    StationCheck(**ARGDICT)

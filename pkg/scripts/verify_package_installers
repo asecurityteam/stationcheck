@@ -1,13 +1,20 @@
 #!/usr/bin/env sh
 
-#Verifies Homebrew is installed
+# Verifies that required package installers and dependencies are installed prior to running the workstation check.
+
+
+# Package Installers
+
+# Verifies Homebrew is installed
 command -v brew
 if [ $? != 0 ]; then
     # Mac
     /usr/bin/ruby -e $(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)
 fi
 
-#Verifies Python 3.7 is installed
+# StationCheck Dependencies
+
+# Verifies Python 3.7 is installed
 command -v python3
 if [ $? == 0 ]; then
     brew upgrade python3
@@ -16,7 +23,7 @@ else
     brew upgrade python3
 fi
 
-#Additional configurations
+# Additional configurations
 pip3 install pyyaml
 pip3 install setuptools
 pip3 install packaging

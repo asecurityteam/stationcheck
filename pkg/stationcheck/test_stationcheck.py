@@ -1,12 +1,13 @@
+#!/usr/bin/env python3
 '''Runs unit tests on stationcheck'''
-from pkg.stationcheck.stationcheck import station_check
+from pkg.stationcheck.stationcheck import StationCheck
 
 TEST_COMMAND = "pip3 install pylint"
 TEST_EXTRACTOR = "--version 2>&1 | sed -n 2p | cut -d ' ' -f2 | sed -n 1p | tr -d ','"
 TEST_REQ = "1.9"
 CONFIG = "pkg/config/requirements.yaml"
 CONFIG_LIST = ["pip3 install pylint", "pip3 install pyyaml"]
-TEST_SC = station_check(CONFIG)
+TEST_SC = StationCheck(CONFIG)
 
 def test_print_results():
     '''Tests workstation results printing method'''

@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 '''Runs unit tests on stationcheck'''
 from pkg.stationcheck.stationcheck import StationCheck
+import os
 
 TEST_COMMAND = "pip3 install pylint"
 TEST_EXTRACTOR = "--version 2>&1 | sed -n 2p | cut -d ' ' -f2 | sed -n 1p | tr -d ','"
@@ -37,3 +38,7 @@ def test_install_package():
 def test_install_configs():
     '''Tests that configurations run successfully'''
     assert TEST_SC.install_configs(CONFIG_LIST)
+
+def test_black_box():
+    '''Tests stationcheck as a whole'''
+    os.system("python3 -m pkg.stationcheck.stationcheck -c %s" % (CONFIG))

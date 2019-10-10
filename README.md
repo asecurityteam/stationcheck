@@ -1,5 +1,7 @@
 <a id="markdown-SecDev Check" name="SecDev Check"></a>
 # Station Check - A simple workstation setup tool
+[![Build Status](https://travis-ci.com/asecurityteam/stationcheck.png?branch=master)](https://travis-ci.com/asecurityteam/stationcheck)
+[![codecov.io](https://codecov.io/github/asecurityteam/stationcheck/coverage.svg?branch=master)](https://codecov.io/github/asecurityteam/stationcheck?branch=master)
 
 <https://github.com/asecurityteam/stationcheck>
 
